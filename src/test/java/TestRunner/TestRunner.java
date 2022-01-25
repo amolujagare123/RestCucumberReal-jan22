@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "Features" ,
-        glue="stepdefinitions" ,
-        tags = "@createUser")
+        glue="stepdefinitions",
+       tags="@chat")
 public class TestRunner {
 }

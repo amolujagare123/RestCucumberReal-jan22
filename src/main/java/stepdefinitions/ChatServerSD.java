@@ -29,8 +29,12 @@ public class ChatServerSD extends ChatServerUtil {
     @Given("Add user payload is created")
     public void add_user_payload_is_created() throws IOException {
 
-         reqSpec =getRequestSpecification();
+        if(reqSpec==null) {
+            reqSpec = getRequestSpecification();
+        }
          request = given().log().all().spec(reqSpec);
+
+        request.body(getCreateUserPayload("username123","password123","name","surname"));
 
     }
 
@@ -63,5 +67,48 @@ public class ChatServerSD extends ChatServerUtil {
         String actual = js.get(jsonPath).toString();
 
         Assert.assertEquals("the json path value doesnot match",expectedValue,actual);
+    }
+
+
+    @Given("^Get user Base is created$")
+    public void get_user_base_is_created() throws Throwable {
+        if(reqSpec==null) {
+            reqSpec = getRequestSpecification();
+        }
+        request = given().log().all().spec(reqSpec);
+    }
+
+    @When("^User calls GetUser request using GET method with userId \"([^\"]*)\"$")
+    public void user_calls_getuser_request_using_get_method_with_userid_something(String userId) throws Throwable {
+
+        response =  request.when().get("/restapi/user/"+userId);
+    }
+
+    @Given("^delete user Base is created$")
+    public void delete_user_base_is_created() throws Throwable {
+        if(reqSpec==null) {
+            reqSpec = getRequestSpecification();
+        }
+        request = given().log().all().spec(reqSpec);
+    }
+
+    @When("^User calls DeleteUser request using Delete method with userId \"([^\"]*)\"$")
+    public void user_calls_deleteuser_request_using_delete_method_with_userid_something(String userId) throws Throwable {
+
+        response =  request.when().delete("/restapi/user/"+userId);
+    }
+
+
+    @When("^User calls \"([^\"]*)\" request using \"([^\"]*)\" method with userId \"([^\"]*)\"$")
+    public void user_calls_something_request_using_something_method_with_userid_something(String requestType, String requestMethod, String userId) throws Throwable {
+
+        switch (requestType)
+        {
+            case "CreateUser" : response =  request.when().post("/restapi/user/");break;
+            case "GetUser" : response =  request.when().get("/restapi/user/"+userId);break;
+            case "DeleteUser" : response =  request.when().delete("/restapi/user/"+userId);break;
+        }
+
+
     }
 }
